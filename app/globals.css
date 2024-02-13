@@ -31,3 +31,11 @@ body {
     text-wrap: balance;
   }
 }
+
+::selection{
+  background-color: #bc00bcc1;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
