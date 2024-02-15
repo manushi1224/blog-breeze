@@ -66,9 +66,9 @@ function Navbar() {
                       {status === "authenticated" && (
                         <div className="flex gap-3">
                           <Image
-                            height={100}
-                            width={100}
-                            className="w-6 h-6 rounded-full"
+                            height={25}
+                            width={25}
+                            className="rounded-full"
                             src={session?.user?.image!}
                             alt="Rounded avatar"
                           ></Image>
@@ -106,7 +106,7 @@ function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/api/auth/signin"
+                  href="/login"
                   className="text-white md:bg-transparent md:text-fuchsia-700 md:dark:text-fuchsia-500"
                 >
                   Sign in
