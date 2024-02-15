@@ -6,10 +6,10 @@ export const dynamicParams = false;
 export async function generateStaticParams() {
   const blogData = await getAllBlogs();
 
-  return blogData.blog.map((item: any) => ({ slug: item.slug }));
+  return blogData.blogs.map((item: any) => ({ slug: item.slug }));
 }
 
-export async function getBlogBySlug(slug: any) {
+async function getBlogBySlug(slug: any) {
   const result = await fetch(`http://localhost:3000/api/blog/${slug}`);
 
   if (!result.ok) {
