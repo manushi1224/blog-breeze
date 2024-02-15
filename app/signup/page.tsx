@@ -5,7 +5,7 @@ import { useState } from "react";
 import Alert from "../ui/Alert";
 import Link from "next/link";
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");

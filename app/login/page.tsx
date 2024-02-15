@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
