@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
-    const post = await fetch(`http://localhost:8000/posts/?slug=${params.slug}`);
+    const post = await fetch(`https://blog-app-api-ughb.onrender.com/posts/?slug=${params.slug}`);
     const data = await post.json();
 
     if (!post) {

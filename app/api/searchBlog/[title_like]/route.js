@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
   try {
     const post = await fetch(
-      `http://localhost:8000/posts/?title_like=${params.title_like}`
+      `https://blog-app-api-ughb.onrender.composts/?title_like=${params.title_like}`
     );
     const blogs = await post.json();
 

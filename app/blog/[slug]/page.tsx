@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const dynamicParams = false;
 
-export async function generteStaticParams() {
+export async function generateStaticParams() {
   const blogData = await getAllBlogs();
 
   return blogData.blog.map((item: any) => ({ slug: item.slug }));
