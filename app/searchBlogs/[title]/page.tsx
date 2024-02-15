@@ -1,6 +1,6 @@
 import { getAllBlogs } from "@/app/lib/blog";
 
-export async function generteStaticParams() {
+export async function generateStaticParams() {
   const blogData = await getAllBlogs();
 
   return blogData.blog.map((item: any) => ({ title: item.title }));
