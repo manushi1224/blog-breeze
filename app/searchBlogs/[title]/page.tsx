@@ -6,7 +6,7 @@ export async function generateStaticParams() {
   return blogData.blog.map((item: any) => ({ title: item.title }));
 }
 
-export async function getBlogsBySearch(title: string) {
+async function getBlogsBySearch(title: string) {
   const result = await fetch(`http://localhost:3000/api/searchBlog/${title}`);
   if (!result.ok) {
     throw new Error("Failed to fetch blog");
