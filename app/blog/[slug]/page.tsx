@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 }
 
 async function getBlogBySlug(slug: any) {
-  const result = await fetch(`https://blog-breeze-2rit6h9kt-manushis-projects.vercel.app/api/blog/${slug}`);
+  const result = await fetch(`http://localhost:3000/api/blog/${slug}`);
 
   if (!result.ok) {
     throw new Error("Failed to fetch blog");

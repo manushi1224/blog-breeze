@@ -38,18 +38,18 @@ export default function Page() {
         closeAlert();
         return;
       }
-      console.log(user)
-      const res = await axios.post("https://blog-breeze-2rit6h9kt-manushis-projects.vercel.app/api/register", user);
+      console.log(user);
+      const res = await axios.post("http://localhost:3000/api/register", user);
       console.log(res);
       if (res.status == 200 || res.status == 201) {
         console.log("user added successfully");
         setMessage("Account Created !");
-        router.push("/");
+        // router.push("/");
+        setFormSuccess(true);
+        router.push("/login");
+        setLoading(true);
+        closeAlert();
       }
-      setFormSuccess(true);
-      router.push("/login");
-      setLoading(true);
-      closeAlert();
     } catch (error: any) {
       setFormSuccess(false);
       console.log("Signup failed", error);
