@@ -48,13 +48,20 @@ export default function Page() {
       });
       if (res?.error) {
         console.log(res);
-        setMessage("Some error occured!");
+        setMessage("Invalid Credentials!");
+        setFormSuccess(false);
+        setLoading(true);
+        closeAlert();
+        return;
       }
+      setMessage("Login Successfull!");
       console.log(res);
       setFormSuccess(true);
-      router.push("/");
       setLoading(true);
       closeAlert();
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
     } catch (error: any) {
       setFormSuccess(false);
       console.log("SignIn failed", error);
@@ -62,9 +69,11 @@ export default function Page() {
   };
 
   const signInWithGoogle = async () => {
-    const res = await signIn("google", { callbackUrl: '/' });
-    console.log("res is", res)
-    router.push("/");
+    const res = await signIn("google", { callbackUrl: "/" });
+    setMessage("Sign In Successfull!")
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
     setFormSuccess(true);
     setLoading(true);
     closeAlert();

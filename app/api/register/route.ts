@@ -1,25 +1,25 @@
-import { connectDb } from "@/app/config/dbConfig";
-import User from "@/app/models/userModel";
+import { connectDb } from "@/config/dbConfig";
+import User from "@/models/userModel";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 connectDb();
 
 export async function POST(request: NextRequest) {
-  console.log("requested in route.js");
+  // console.log("requested in route.js");
   try {
     const { name, email, password } = await request.json();
     console.log({ name, email, password });
     const user = await User.findOne({ email: email });
 
     if (user) {
-      console.log("user already exists")
-      return NextResponse.json({
-        message: "User already exists",
-        status: "400",
-      });
+      return NextResponse.json(
+        {
+          message: "User already exists",
+          status: "400",
+        },
+      );
     }
-
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
@@ -32,9 +32,10 @@ export async function POST(request: NextRequest) {
     const savedUser = await newUser.save();
 
     return NextResponse.json({
-      message: "User created Successfully",
+      message: "User created successfully",
       success: true,
       savedUser,
+      status: 200,
     });
   } catch (error) {
     console.log(error, "error is in route");

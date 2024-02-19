@@ -22,34 +22,58 @@ export default function Page() {
     }, 5000);
   };
 
+  const loadAlertData = ({
+    success,
+    msg,
+    load,
+  }: {
+    success: boolean;
+    msg: string;
+    load: boolean;
+  }) => {
+    setFormSuccess(success);
+    setMessage(msg);
+    setLoading(load);
+    closeAlert();
+  };
+
   const onSignup = async (event: any) => {
     event.preventDefault();
     try {
       if (!user.name || !user.email || !user.password) {
-        setMessage("Please fill all the fields");
-        setLoading(true);
-        closeAlert();
+        loadAlertData({
+          success: false,
+          msg: "Please fill all the fields",
+          load: true,
+        });
         return;
       }
       const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
       if (!emailRegex.test(user.email)) {
-        setMessage("Invalid email id");
-        setLoading(true);
-        closeAlert();
+        loadAlertData({
+          success: false,
+          msg: " Invalid Email ID!",
+          load: true,
+        });
         return;
       }
-      console.log(user);
       const res = await axios.post("http://localhost:3000/api/register", user);
-      console.log(res);
-      if (res.status == 200 || res.status == 201) {
-        console.log("user added successfully");
+      if (res.data.status == 200 || res.data.status == 201) {
         setMessage("Account Created !");
-        // router.push("/");
         setFormSuccess(true);
         router.push("/login");
         setLoading(true);
         closeAlert();
       }
+      // setMessage(res.data.message);
+      // setFormSuccess(false);
+      // setLoading(true);
+      loadAlertData({
+        success: false,
+        msg: res.data.message,
+        load: true,
+      });
+      // closeAlert();
     } catch (error: any) {
       setFormSuccess(false);
       console.log("Signup failed", error);

@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/app/lib/blog";
+import { getAllBlogs } from "@/lib/blog";
 import Image from "next/image";
 
 export const dynamicParams = false;
@@ -19,11 +19,11 @@ async function getBlogBySlug(slug: any) {
 }
 
 export default async function Page({ params }: any) {
-  const { data } = await getBlogBySlug(params.slug);
+  const { blogs } = await getBlogBySlug(params.slug);
   return (
     <>
-      {data &&
-        data.map((blog: any) => {
+      {blogs &&
+        blogs.map((blog: any) => {
           return (
             <div
               key={blog.slug}

@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/app/lib/blog";
+import { getAllBlogs } from "@/lib/blog";
 
 export async function generateStaticParams() {
   const blogData = await getAllBlogs();

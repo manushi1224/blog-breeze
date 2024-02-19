@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 
 function Navbar() {
   const { data: session, status } = useSession();
+  console.log(session);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 mb-5">
@@ -18,9 +19,9 @@ function Navbar() {
           <Image
             src={img}
             className="h-8"
-            alt="Flowbite Logo"
+            alt="blog-breeze"
             width={170}
-            height={50}
+            height={0}
           />
         </Link>
         <button
@@ -69,7 +70,10 @@ function Navbar() {
                             height={25}
                             width={25}
                             className="rounded-full"
-                            src={session?.user?.image!}
+                            src={
+                              session?.user?.image! ||
+                              `https://avatar.iran.liara.run/username?username=${session.user?.name}`
+                            }
                             alt="Rounded avatar"
                           ></Image>
                           <span className="">{session.user?.name}</span>

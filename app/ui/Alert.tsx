@@ -19,7 +19,7 @@ export default function Alert({
           viewBox="0 0 24 24"
           strokeWidth="2"
           stroke="currentColor"
-          className="w-6 h-6 text-lime-500"
+          className="w-6 h-6 text-green-500"
         >
           <path
             strokeLinecap="round"
@@ -34,7 +34,7 @@ export default function Alert({
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="w-6 h-6 text-red-700"
+          className="w-6 h-6 text-red-500"
         >
           <path
             strokeLinecap="round"

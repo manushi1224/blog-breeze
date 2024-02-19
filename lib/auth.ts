@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { connectDb } from "../config/dbConfig";
 import bcryptjs from "bcryptjs";
-import User from "@/app/models/userModel";
+import User from "@/models/userModel";
 import { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
@@ -61,8 +61,9 @@ export const authOptions: NextAuthOptions = {
             email: email,
           });
           const response = await newUser.save();
+          console.log(newUser);
           if (response) {
-            console.log(response);
+            console.log("response is", response);
             return newUser;
           }
         } catch (error) {
@@ -73,7 +74,10 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        (token.email = user.email), (token.name = user.name);
+        console.log("user",user);
+        (token.email = user.email),
+          (token.name = user.name),
+          (token.id = user.id);
       }
       return token;
     },
@@ -81,8 +85,8 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email;
         session.user.name = token.name;
+        session.user.id = token.id;
       }
-      console.log(session);
       return session;
     },
   },

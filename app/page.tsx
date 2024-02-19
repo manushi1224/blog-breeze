@@ -1,9 +1,7 @@
-import Blogs from "./components/Blogs/Blogs";
-import { SearchInput } from "./components/SearchInputs/SearchInputs";
+import Blogs from "@/components/Blogs/Blogs";
+import { SearchInput } from "../components/SearchInputs/SearchInputs";
 import { Suspense } from "react";
 import Skeleton from "./ui/Skeleton";
-import Navbar from "./components/Navigation/Navbar";
-import { getServerSession } from "next-auth";
 
 export default async function Page({
   searchParams,
@@ -16,7 +14,7 @@ export default async function Page({
   return (
     <main>
       <div className="flex justify-center">
-        <SearchInput placeholder={""} />
+        <SearchInput placeholder={"Search by Title...."} />
       </div>
       <h1 className="text-4xl text-center p-10 font-extrabold">All Posts</h1>
       <Suspense key={query} fallback={<Skeleton />}>
