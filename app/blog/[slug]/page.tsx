@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/lib/blog";
+import { getAllBlogs } from "@/app/lib/blog";
 import Image from "next/image";
 
 export const dynamicParams = false;
@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 }
 
 async function getBlogBySlug(slug: any) {
-  const result = await fetch(`http://localhost:3000/api/blog/${slug}`);
+  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${slug}`);
 
   if (!result.ok) {
     throw new Error("Failed to fetch blog");

@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 
 function Navbar() {
   const { data: session, status } = useSession();
-  console.log(session);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 mb-5">
@@ -61,11 +60,21 @@ function Navbar() {
             </li>
             {session ? (
               <>
+                <li>
+                  <Link
+                    href="/createBlog"
+                    className="block py-2 px-3 text-white bg-fuchsia-700 rounded md:bg-transparent md:text-fuchsia-700 md:p-0 dark:text-white md:dark:text-fuchsia-500"
+                    aria-current="page"
+                  >
+                    Create Blog
+                  </Link>
+                </li>
                 <div className="dropdown inline-block relative">
                   <button className="bg-transperent text-fuchsia-500 font-semibold rounded inline-flex items-center">
                     <span className="mr-1">
                       {status === "authenticated" && (
                         <div className="flex gap-3">
+                          {/* <span>{session?.user?.id!}</span> */}
                           <Image
                             height={25}
                             width={25}

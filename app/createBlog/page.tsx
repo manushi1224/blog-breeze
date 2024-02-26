@@ -1,19 +1,22 @@
 "use client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import Alert from "../ui/Alert";
-import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default function Page() {
+function Page() {
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [blog, setBlog] = useState<any>({
+    title: "",
+    category: "",
+    description: "",
+    createdDate: "",
+  });
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-  const [user, setUser] = useState<any>({
-    name: "",
-    email: "",
-    password: "",
-  });
   const [loading, setLoading] = useState<boolean>(false);
 
   const closeAlert = () => {
@@ -39,8 +42,14 @@ export default function Page() {
 
   const onSignup = async (event: any) => {
     event.preventDefault();
+    console.log(blog);
     try {
-      if (!user.name || !user.email || !user.password) {
+      if (
+        !blog.title ||
+        !blog.description ||
+        !blog.category ||
+        !blog.createdDate
+      ) {
         loadAlertData({
           success: false,
           msg: "Please fill all the fields",
@@ -48,19 +57,14 @@ export default function Page() {
         });
         return;
       }
-      const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-      if (!emailRegex.test(user.email)) {
-        loadAlertData({
-          success: false,
-          msg: " Invalid Email ID!",
-          load: true,
-        });
-        return;
-      }
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/register`,
-        user
-      );
+
+      const res = await axios.post("/api/createBlog/new", {
+        title: blog.title,
+        category: blog.category,
+        createdDate: blog.createdDate,
+        description: blog.description,
+        userId: session?.user?.id,
+      });
       if (res.data.status == 200 || res.data.status == 201) {
         loadAlertData({
           success: true,
@@ -74,9 +78,8 @@ export default function Page() {
         msg: res.data.message,
         load: true,
       });
-    } catch (error: any) {
-      setFormSuccess(false);
-      console.log("Signup failed", error);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -88,7 +91,7 @@ export default function Page() {
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-5 text-center text-4xl font-extrabold leading-9 tracking-tight text-gray-200">
-            Create your account
+            Create A New Blog
           </h2>
         </div>
 
@@ -100,19 +103,19 @@ export default function Page() {
           >
             <div>
               <label
-                htmlFor="name"
+                htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-200"
               >
-                Full Name
+                Title
               </label>
               <div className="mt-2">
                 <input
-                  id="name"
-                  name="name"
+                  id="title"
+                  name="title"
                   type="text"
-                  autoComplete="name"
+                  autoComplete="title"
                   //   required
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  onChange={(e) => setBlog({ ...blog, title: e.target.value })}
                   className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 ></input>
               </div>
@@ -120,42 +123,66 @@ export default function Page() {
 
             <div>
               <label
-                htmlFor="email"
+                htmlFor="category"
                 className="block text-sm font-medium leading-6 text-gray-200"
               >
-                Email address
+                Category
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
+                  id="category"
+                  name="category"
+                  type="text"
                   autoComplete="email"
                   //   required
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                  onChange={(e) =>
+                    setBlog({ ...blog, category: e.target.value })
+                  }
                   className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 ></input>
               </div>
             </div>
 
             <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium leading-6 text-gray-200"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={3}
+                  autoComplete="email"
+                  //   required
+                  onChange={(e) =>
+                    setBlog({ ...blog, description: e.target.value })
+                  }
+                  className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                ></textarea>
+              </div>
+            </div>
+
+            <div>
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="password"
+                  htmlFor="createdDate"
                   className="block text-sm font-medium leading-6 text-gray-200"
                 >
-                  Password
+                  Created Date
                 </label>
               </div>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
-                  type="password"
+                  id="createdDate"
+                  name="createdDate"
+                  type="date"
                   autoComplete="current-password"
                   //   required
                   onChange={(e) =>
-                    setUser({ ...user, password: e.target.value })
+                    setBlog({ ...blog, createdDate: e.target.value })
                   }
                   className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 ></input>
@@ -167,22 +194,14 @@ export default function Page() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-purple-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign Up
+                Post This Blog!
               </button>
             </div>
           </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Already a member? &nbsp;
-            <Link
-              href="/login"
-              className="font-semibold leading-6 text-purple-600 hover:text-fuchsia-500"
-            >
-              Sign In
-            </Link>
-          </p>
         </div>
       </div>
     </>
   );
 }
+
+export default Page;

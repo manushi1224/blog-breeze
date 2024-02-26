@@ -13,10 +13,14 @@ const blogSchema = new mongoose.Schema({
     type: Date,
     required: [true, "Created Date is required."],
   },
-  image: {
+  slug: {
     type: String,
-    required: [true, "Image is required."],
+    required: [true, "Slug is required."],
   },
+  // image: {
+  //   type: String,
+  //   required: [true, "Image is required."],
+  // },
   description: {
     type: String,
     required: [true, "Description is required"],
@@ -28,6 +32,6 @@ const blogSchema = new mongoose.Schema({
   },
 });
 
-const blogModel = mongoose.models.Blogs || mongoose.model("Blogs", blogSchema);
+const Blogs = mongoose.models.Blogs || mongoose.model("Blogs", blogSchema);
 
-export default blogModel;
+export default Blogs;

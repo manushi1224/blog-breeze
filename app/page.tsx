@@ -1,5 +1,5 @@
-import Blogs from "@/components/Blogs/Blogs";
-import { SearchInput } from "../components/SearchInputs/SearchInputs";
+import Blogs from "@/app/components/Blogs/Blogs";
+import { SearchInput } from "./components/SearchInputs/SearchInputs";
 import { Suspense } from "react";
 import Skeleton from "./ui/Skeleton";
 

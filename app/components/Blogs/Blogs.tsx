@@ -1,5 +1,5 @@
-import { fetchFilteredBlogs } from "@/lib/fetchFilteredBlogs";
-import { getAllBlogs } from "@/lib/blog";
+import { fetchFilteredBlogs } from "@/app/lib/fetchFilteredBlogs";
+import { getAllBlogs } from "@/app/lib/blog";
 import BlogCard from "@/app/ui/BlogCard";
 
 

@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/lib/blog";
+import { getAllBlogs } from "@/app/lib/blog";
 
 export async function generateStaticParams() {
   const blogData = await getAllBlogs();
@@ -7,7 +7,9 @@ export async function generateStaticParams() {
 }
 
 async function getBlogsBySearch(title: string) {
-  const result = await fetch(`http://localhost:3000/api/searchBlog/${title}`);
+  const result = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/searchBlog/${title}`
+  );
   if (!result.ok) {
     throw new Error("Failed to fetch blog");
   }

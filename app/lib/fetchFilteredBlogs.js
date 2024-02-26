@@ -1,5 +1,7 @@
 export async function fetchFilteredBlogs(query) {
-  let result = await fetch(`http://localhost:3000/api/searchBlog/${query}`);
+  let result = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/searchBlog/${query}`
+  );
   if (!result.ok) {
     throw new Error("Something went wrong");
   }
