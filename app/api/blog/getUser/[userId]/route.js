@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import Blogs from "@/app/models/blogModel";
+import User from "@/app/models/userModel";
 
-export const revalidate = 0
+export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 export async function GET(req, { params }) {
   try {
-    const data = await Blogs.findOne({slug: params.slug})
+    const data = await User.findById(params.userId);
 
     return NextResponse.json({
-      blogs: data,
+      user: data,
     });
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -8,23 +8,22 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { title, category, createdDate, description, userId } =
+    const { title, category, createdDate, description, userEmail, imageUrl } =
       await req.json();
-    console.log({ title, category, createdDate, description, userId });
     await connectDb();
+    const currentUser = await User.findOne({ email: userEmail });
     const slug = title.toLowerCase().split(" ").join("-");
-    console.log(slug);
     const newBlog = new Blogs({
       title,
       category,
       createdDate,
       slug,
-      // image,
+      image: imageUrl,
       description,
-      creator: userId,
+      creator: currentUser._id,
     });
 
-    const user = await User.findById(userId);
+    const user = await User.findById(currentUser._id);
     if (!user) {
       return NextResponse.json({
         message: "Some error occured",
@@ -45,11 +44,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
         status: 400,
       });
     }
+    console.log(newBlog);
     return NextResponse.json({
       blog: newBlog,
       status: 201,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       message: "Could not create the blog.",
       status: 400,

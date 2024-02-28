@@ -14,7 +14,7 @@ export default async function Page({
   return (
     <main>
       <div className="flex justify-center">
-        <SearchInput placeholder={"Search by Title...."} />
+        <SearchInput placeholder={"Search by Keywords...."} />
       </div>
       <h1 className="text-4xl text-center p-10 font-extrabold">All Posts</h1>
       <Suspense key={query} fallback={<Skeleton />}>

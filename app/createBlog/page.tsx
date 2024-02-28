@@ -1,29 +1,88 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "../ui/Alert";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { analytics } from "../lib/firebase";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 function Page() {
   const { data: session, status } = useSession();
+  // console.log(session);
   const router = useRouter();
   const [blog, setBlog] = useState<any>({
     title: "",
     category: "",
     description: "",
     createdDate: "",
+    image: "",
   });
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [media, setMedia] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [uploading, setUploading] = useState(0);
   const closeAlert = () => {
     setTimeout(() => {
       setLoading(false);
     }, 5000);
   };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    const name = new Date().getTime() + selectedFile.name;
+    const storageRef = ref(analytics, "images/" + name);
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploading(progress);
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        switch (error.code) {
+          case 'storage/unauthorized':
+            break;
+          case 'storage/canceled':
+            break;
+    
+          // ...
+    
+          case 'storage/unknown':
+            break;
+        }
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setMedia(downloadURL);
+        });
+      }
+    );
+  };
+
+  useEffect(() => {
+    handleUpload();
+  }, [selectedFile]);
 
   const loadAlertData = ({
     success,
@@ -48,7 +107,8 @@ function Page() {
         !blog.title ||
         !blog.description ||
         !blog.category ||
-        !blog.createdDate
+        !blog.createdDate ||
+        !blog.image
       ) {
         loadAlertData({
           success: false,
@@ -58,20 +118,22 @@ function Page() {
         return;
       }
 
-      const res = await axios.post("/api/createBlog/new", {
+      const res = await axios.post("/api/blog/new", {
         title: blog.title,
         category: blog.category,
         createdDate: blog.createdDate,
         description: blog.description,
-        userId: session?.user?.id,
+        userEmail: session?.user?.email,
+        imageUrl: media,
       });
       if (res.data.status == 200 || res.data.status == 201) {
+        console.log(res.data);
         loadAlertData({
           success: true,
-          msg: "Account Created !",
+          msg: "Blog Created",
           load: true,
         });
-        router.push("/login");
+        router.push("/");
       }
       loadAlertData({
         success: false,
@@ -190,8 +252,32 @@ function Page() {
             </div>
 
             <div>
+              <label>
+                <input
+                  type="file"
+                  hidden
+                  onChange={({ target }) => {
+                    if (target.files) {
+                      const file = target.files[0];
+                      setBlog({ ...blog, image: URL.createObjectURL(file) });
+                      setSelectedFile(file);
+                    }
+                  }}
+                />
+                <div className="w-full aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer">
+                  {blog.image !== "" ? (
+                    <img src={blog.image} alt="" />
+                  ) : (
+                    <span>Select Cover Image</span>
+                  )}
+                </div>
+              </label>
+            </div>
+
+            <div>
               <button
                 type="submit"
+                disabled={uploading !== 100}
                 className="flex w-full justify-center rounded-md bg-purple-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Post This Blog!

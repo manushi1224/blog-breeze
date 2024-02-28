@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { connectDb } from "../config/dbConfig";
 import bcryptjs from "bcryptjs";
 import User from "@/app/models/userModel";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, Session } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -78,14 +78,16 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }: { session: Session; token: any }) {
       if (session.user) {
-        session.user.email = token.email;
-        session.user.name = token.name;
-        const sessionUser = await User.findOne({
-          email: session.user.email,
-        });
-        session.user.id = sessionUser._id.toString();
+        session = {
+          ...session,
+          user: {
+            email: token.email,
+            name: token.name,
+            ...session.user,
+          },
+        };
       }
       return session;
     },

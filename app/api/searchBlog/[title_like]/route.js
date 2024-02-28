@@ -1,15 +1,9 @@
 import { NextResponse } from "next/server";
+import Blogs from "@/app/models/blogModel";
 
 export async function GET(req, { params }) {
   try {
-    const post = await fetch(
-      `https://blog-app-api-ughb.onrender.com/posts/?title_like=${params.title_like}`
-    );
-    const blogs = await post.json();
-
-    if (!post) {
-      return new NextResponse("Not Found!", { status: 404 });
-    }
+    const blogs = await Blogs.find({ $text: { $search: params.title_like } });
 
     return NextResponse.json({
       blogs: blogs,
