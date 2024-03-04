@@ -12,6 +12,6 @@ export async function GET(req, { params }) {
       user: data,
     });
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse.json("Internal Server Error", { status: 500 });
   }
 }
